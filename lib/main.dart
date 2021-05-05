@@ -25,6 +25,9 @@ class MyHomePage extends StatelessWidget {
     Transaction(id: 't3', name: 'Pay order', amount: 99.99, date: DateTime.now()),
   ];
 
+  final nameController = TextEditingController();
+  final amountController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +44,18 @@ class MyHomePage extends StatelessWidget {
               child: Text('Chart'),
             ),
           ),
+          
+          Card(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  TextField(decoration: InputDecoration(labelText: 'Name'), controller: nameController ,),
+                  TextField(decoration: InputDecoration(labelText: 'Amount'),controller: amountController,),
+                  TextButton(onPressed: (){print(nameController.text);print(amountController.text);}, child: Text('Add Transaction',style: TextStyle(color: Colors.lightGreen),), )
+                ],),
+            ) ,),
+
           Column(
             children: transactions.map((tx) { 
               return Card(
