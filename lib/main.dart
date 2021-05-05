@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './transaction.dart';
 
@@ -19,8 +20,9 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   
   final List <Transaction> transactions = [
-    Transaction(id: 't1', name: 'Car Service', amount: 100.5, date: DateTime.now()),
-    Transaction(id: 't2', name: 'Salary', amount: 10000000, date: DateTime.now()),
+    Transaction(id: 't1', name: 'Car Service', amount: 90.55, date: DateTime.now()),
+    Transaction(id: 't2', name: 'Grocery shopping', amount: 47.05, date: DateTime.now()),
+    Transaction(id: 't3', name: 'Pay order', amount: 99.99, date: DateTime.now()),
   ];
 
   @override
@@ -28,9 +30,10 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter Demo'),
+        backgroundColor: Colors.purple,
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[ 
           Container(
             width: double.infinity,
@@ -41,7 +44,38 @@ class MyHomePage extends StatelessWidget {
           Column(
             children: transactions.map((tx) { 
               return Card(
-                child: Text(tx.name),
+                child: Row(children: <Widget>[
+                  Container(
+                    child: Text(
+                      '\$${tx.amount}',
+                      style: TextStyle(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20 ),
+                    ),
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.deepPurple, width: 2)
+                    ),
+                    padding: EdgeInsets.all(10),),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        tx.name.toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        DateFormat.yMd().add_jm().format(tx.date),
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),),
+                    ],
+                  ),
+                ],),
               );
             }
             ).toList()
