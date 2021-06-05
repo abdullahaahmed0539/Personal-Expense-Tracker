@@ -17,7 +17,7 @@ class NewTransactions extends StatelessWidget {
                 children: <Widget>[
                   TextField(decoration: InputDecoration(labelText: 'Name'), controller: nameController ,),
                   TextField(decoration: InputDecoration(labelText: 'Amount'),controller: amountController,),
-                  TextButton(onPressed: (){addUser(nameController.text, double.parse(amountController.text));}, child: Text('Add Transaction',style: TextStyle(color: Colors.lightGreen),), )
+                  TextButton(onPressed: (){addUser(nameController.text, double.parse(amountController.text));}, child: Text('Add Transaction', style: TextStyle(color: Colors.lightGreen),), )
                 ],),
             ) ,
       );
