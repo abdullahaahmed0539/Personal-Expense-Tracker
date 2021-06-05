@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/widgets/userTransaction.dart';
+
+import './models/transaction.dart';
+import './widgets/transactionList.dart';
+import './widgets//newTransactions.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,7 +17,36 @@ class MyApp extends StatelessWidget {
 }
 
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  
+  final List <Transaction> transactions = [];
+
+  void _addUser(String newName, double newAmount){
+    final newTx = Transaction(id: 't3', name: newName, amount: newAmount, date: DateTime.now());
+    setState(() {
+      transactions.add(newTx);
+    });
+    print(transactions);
+  }
+  
+  
+  
+  void _startAddNewTransaction( BuildContext ctx){
+    showModalBottomSheet(context: ctx, builder: (_){
+      return GestureDetector(
+        child: NewTransactions(_addUser), 
+        onTap: (){},
+        behavior: HitTestBehavior.opaque,
+      );
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +54,9 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Flutter Demo'),
         backgroundColor: Colors.purple,
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.add), onPressed: () => _startAddNewTransaction(context))
+        ],
       ),
       body: SingleChildScrollView(
               child: Column(
@@ -34,7 +69,7 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             
-            UserTransactions(),
+        TransactionList(transactions),
 
               
             
@@ -43,6 +78,7 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
       
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => _startAddNewTransaction(context), backgroundColor: Colors.purple,),
       
     );
   }

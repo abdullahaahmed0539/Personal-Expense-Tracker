@@ -1,13 +1,31 @@
 import 'package:flutter/material.dart';
 
-class NewTransactions extends StatelessWidget {
+class NewTransactions extends StatefulWidget {
   
-  final nameController = TextEditingController();
-  final amountController = TextEditingController();
   final Function addUser;
 
   NewTransactions(this.addUser);
-  
+
+  @override
+  _NewTransactionsState createState() => _NewTransactionsState();
+}
+
+class _NewTransactionsState extends State<NewTransactions> {
+  final nameController = TextEditingController();
+
+  final amountController = TextEditingController();
+
+  void _submitData(){
+    String name = nameController.text;
+    double amount = double.parse(amountController.text);
+    
+    if(name.isEmpty || amount <= 0)
+      return;
+
+    widget.addUser(name, amount);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -15,9 +33,18 @@ class NewTransactions extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  TextField(decoration: InputDecoration(labelText: 'Name'), controller: nameController ,),
-                  TextField(decoration: InputDecoration(labelText: 'Amount'),controller: amountController,),
-                  TextButton(onPressed: (){addUser(nameController.text, double.parse(amountController.text));}, child: Text('Add Transaction', style: TextStyle(color: Colors.lightGreen),), )
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Name'), 
+                    controller: nameController,
+                    onSubmitted: (_) => _submitData(),
+                    ),
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Amount'),
+                    controller: amountController,
+                    keyboardType: TextInputType.number,
+                    onSubmitted: (_) => _submitData(),
+                    ),
+                  TextButton(onPressed: _submitData, child: Text('Add Transaction', style: TextStyle(color: Colors.lightGreen),), )
                 ],),
             ) ,
       );
