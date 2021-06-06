@@ -23,7 +23,10 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Quicksand',
               fontSize: 18,
               fontWeight: FontWeight.bold
-            )
+            ),
+          button: TextStyle(
+            color: Colors.white
+          )
         ),
         appBarTheme: AppBarTheme(
           textTheme: ThemeData.light().textTheme.copyWith(
@@ -58,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  void _addUser(String newName, double newAmount){
-    final newTx = Transaction(id: 't3', name: newName, amount: newAmount, date: DateTime.now());
+  void _addUser(String newName, double newAmount, DateTime chosenDate){
+    final newTx = Transaction(id: chosenDate, name: newName, amount: newAmount, date: chosenDate);
     setState(() {
       _transactions.add(newTx);
     });
@@ -71,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
     showModalBottomSheet(context: ctx, builder: (_){
       return GestureDetector(
         child: NewTransactions(_addUser), 
-        onTap: (){},
         behavior: HitTestBehavior.opaque,
       );
 
