@@ -14,7 +14,13 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 600,
-      child: ListView.builder(
+      child: transactions.isEmpty? Column(
+        children: <Widget> [
+          Text('No transactions yet!', style: Theme.of(context).textTheme.headline6),
+          SizedBox(height: 40,),
+          Container(height: 300, child: Image.asset('assets/images/waiting.png', fit: BoxFit.cover)),
+        ]
+      ) : ListView.builder(
         itemBuilder: (ctx, index){
             return Card(
               child: Row(children: <Widget>[
@@ -23,14 +29,14 @@ class TransactionList extends StatelessWidget {
                   child: Text(
                     '\$${transactions[index].amount.toStringAsFixed(2)}',
                       style: TextStyle(
-                        color: Colors.deepPurple,
+                        color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 20 
                       ),
                   ),
                   margin: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.deepPurple, width: 2)
+                    border: Border.all(color: Theme.of(context).primaryColor, width: 2)
                   ),
                   padding: EdgeInsets.all(10),
                 ),
@@ -41,10 +47,7 @@ class TransactionList extends StatelessWidget {
                     
                     Text(
                       transactions[index].name.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                      ),
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                           
                     Text(
