@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter/services.dart';
 import 'package:flutter_application_1/widgets/chart.dart';
 
 import './models/transaction.dart';
@@ -6,9 +7,18 @@ import './widgets/transactionList.dart';
 import './widgets/newTransactions.dart';
 import './widgets/chart.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  /*
+  FOR ENSURING THAT ALWAYS IN PORTRAIT 
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+   */ 
+  
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,10 +30,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Quicksand',
         textTheme: ThemeData.light().textTheme.copyWith(
           headline6: TextStyle(
-              fontFamily: 'Quicksand',
-              fontSize: 18,
-              fontWeight: FontWeight.bold
-            ),
+            fontFamily: 'Quicksand',
+            fontSize: 18,
+            fontWeight: FontWeight.bold
+          ),
           button: TextStyle(
             color: Colors.white
           )
@@ -40,19 +50,24 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
 }
 
 
 class MyHomePage extends StatefulWidget {
-
+  
   @override
   _MyHomePageState createState() => _MyHomePageState();
+  
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   
-  final List <Transaction> _transactions = [
-  ];
+  final List <Transaction> _transactions = [];
+
+
+  bool _showChart = false;
+
   List<Transaction> get _recentTransactions{
     return _transactions.where((tx){
       return tx.date.isAfter(
@@ -74,45 +89,77 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   
-  
-  
   void _startAddNewTransaction( BuildContext ctx){
     showModalBottomSheet(context: ctx, builder: (_){
       return GestureDetector(
         child: NewTransactions(_addUser), 
         behavior: HitTestBehavior.opaque,
       );
-
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    final mediaQuery = MediaQuery.of(context);
+    final isLandScape = mediaQuery.orientation == Orientation.landscape;
+    final appBar = AppBar(
         title: Text('Personal Expenses'),
-        // backgroundColor: Colors.purple,
         actions: <Widget>[
           IconButton(icon: Icon(Icons.add), onPressed: () => _startAddNewTransaction(context))
         ],
-      ),
-      body: SingleChildScrollView(
-              child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[ 
-            Chart(_recentTransactions),
-            TransactionList(_transactions, _deleteTransaction),
+      );
 
-              
-            
-            
-          ],
+      final txListWidget = Container(
+            height: (mediaQuery.size.height
+             - appBar.preferredSize.height
+             -mediaQuery.padding.top) * 0.7,
+            child: TransactionList(_transactions, _deleteTransaction)
+            );
+
+    return Scaffold(
+      appBar: appBar,
+      body: SingleChildScrollView(
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[ 
+          if (isLandScape) Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Show Char'),
+              Switch(value: _showChart, onChanged: (val){
+                setState(() {
+                  _showChart = val;                  
+                });
+              })
+            ],
+          ),
+          if (!isLandScape) Container(
+            height: (mediaQuery.size.height 
+            - appBar.preferredSize.height
+            -mediaQuery.padding.top) * 0.3,
+            child: Chart(
+              _recentTransactions
+            )
+          ),
+          if(!isLandScape) txListWidget,
+          if(isLandScape) _showChart
+          ? Container(
+            height: (mediaQuery.size.height 
+            - appBar.preferredSize.height
+            -mediaQuery.padding.top) * 0.7,
+            child: Chart(
+              _recentTransactions
+            )
+          ): txListWidget
+        ],
         ),
       ),
-      
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => _startAddNewTransaction(context), ),
-      
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add), 
+        onPressed: () => _startAddNewTransaction(context), 
+      ),
     );
   }
+
 }
 
